@@ -61,7 +61,7 @@ int main() {
     double initialBalance;
 
     do {
-        cout << "\tBank Of India\n";
+        cout << "\tBank Name\n";
         cout << "1. Initialize Account\n";
         cout << "2. Deposit\n";
         cout << "3. Withdraw\n";
