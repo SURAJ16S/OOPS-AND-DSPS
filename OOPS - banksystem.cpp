@@ -2,145 +2,127 @@
 #include<string>
 using namespace std;
 
-class bank {
+class library {
 public:
-    string uname, ifsc;
-    float balance;
-    long phone;
-    long accno;
-
-private:
-    long Accno;
-
-public:
-    bank() {
-        balance = 1000;
-        ifsc = "IFSC00002024";
-    }
-
-    void display_account() {
-        cout << "Account No : " << accno << endl;
-    }
+    string title;
+    string author;
+    float cost;
 
     void accept() {
-        cout << "Enter Username : ";
-        cin >> uname;
-        cout << "Enter Phone No : ";
-        cin >> phone;
-        cout << "Enter Balance : ";
-        cin >> balance;
-        cout << "Enter Account No (10 digit) : ";
-        cin >> accno;
-        Accno = accno;
+        cin.ignore();
+        cout << "Enter Book Title: ";
+        getline(cin, title);
+        cout << "Enter Book Author: ";
+        getline(cin, author);
+        cout << "Enter Book Cost: ";
+        cin >> cost;
     }
 
     void display() {
-        cout << "\nUsername\tBalance\tIFSC Code\n";
-        if (uname != "") {
-            cout << uname << "\t" << balance << "\t" << ifsc << "\n";
-        }
+        cout << title << "\t" << author << "\t" << cost << endl;
     }
 
-    void deposit() {
-        long acn;
-        int deposit;
-        cout << "Enter Account Number: ";
-        cin >> acn;
-
-        if (accno == acn) {
-            cout << "Enter Amount To Deposit: ";
-            cin >> deposit;
-            balance += deposit;
-            cout << "Deposit Successful. New Balance: " << balance << endl;
-        } else {
-            cout << "\nAccount Not Found\n";
-        }
-    }
-
-    void withdraw() {
-        long acn;
-        int withdraw;
-        cout << "Enter Account Number: ";
-        cin >> acn;
-
-        if (accno == acn) {
-            cout << "Enter Amount To Withdraw: ";
-            cin >> withdraw;
-            if (withdraw <= balance) {
-                balance -= withdraw;
-                cout << "Withdraw Successful. Remaining Balance: " << balance << endl;
-            } else {
-                cout << "\nYou Don't Have Sufficient Balance!\n";
+    void ascOrder(library book[], int n) {
+        library temp;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (book[i].cost > book[j].cost) {
+                    temp = book[i];
+                    book[i] = book[j];
+                    book[j] = temp;
+                }
             }
-        } else {
-            cout << "\nUser Not Found\n";
         }
     }
 
-    void check_balance() {
-        long acn;
-        cout << "Enter Account Number: ";
-        cin >> acn;
-
-        if (accno == acn) {
-            cout << "Account Balance: " << balance << endl;
-        } else {
-            cout << "\nAccount Not Found\n";
+    void descOrder(library book[], int n) {
+        library temp;
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (book[i].cost < book[j].cost) {
+                    temp = book[i];
+                    book[i] = book[j];
+                    book[j] = temp;
+                }
+            }
         }
     }
-};
 
-bank user[100];
+    int count(library book[], int n) {
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            if (book[i].title != "") {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    void underfive(library book[], int n) {
+        cout << "Books Under 500:" << endl;
+        cout << "Title\tAuthor\tCost" << endl;
+        for (int i = 0; i < n; i++) {
+            if (book[i].cost < 500) {
+                book[i].display();
+            }
+        }
+    }
+
+} book[100];
 
 int main() {
     int choice;
-    int userindex = 0;
+    int n = 0;
 
     do {
-        cout << "\nBank:";
-        cout << "\n1. Accept Account Details";
-        cout << "\n2. Display Account Details";
-        cout << "\n3. Deposit Money";
-        cout << "\n4. Withdraw Money";
-        cout << "\n5. Check Balance";
-        cout << "\n6. Exit";
-        cout << "\nEnter your choice: ";
+        cout << "Library Management System";
+        cout << "\n1. Accept Books\n2. Display Books in Ascending Order\n3. Display Books in Descending Order\n4. Count Total Books\n5. Display Books Under 500\n6. Exit\nEnter Your Choice: ";
         cin >> choice;
 
         switch (choice) {
         case 1:
-            if (userindex < 100) {
-                user[userindex].accept();
-                userindex++;
-            } else {
-                cout << "User limit reached. Cannot accept more users.\n";
+            cout << "Enter number of books: ";
+            cin >> n;
+
+            for (int i = 0; i < n; i++) {
+                book[i].accept();
             }
             break;
+
         case 2:
-            for (int i = 0; i < userindex; i++) {
-                user[i].display();
+            cout << "Books in ascending order of cost:" << endl;
+            cout << "Title\tAuthor\tCost" << endl;
+            book[0].ascOrder(book, n);
+            for (int i = 0; i < n; i++) {
+                book[i].display();
             }
             break;
+
         case 3:
-            for (int i = 0; i < userindex; i++) {
-                user[i].deposit();
+            cout << "Books in descending order of cost:" << endl;
+            cout << "Title\tAuthor\tCost" << endl;
+            book[0].descOrder(book, n);
+            for (int i = 0; i < n; i++) {
+                book[i].display();
             }
             break;
+
         case 4:
-            for (int i = 0; i < userindex; i++) {
-                user[i].withdraw();
-            }
+            int totalBooks;
+            totalBooks = book[0].count(book, n);
+            cout << "Number of books: " << totalBooks << endl;
             break;
+
         case 5:
-            for (int i = 0; i < userindex; i++) {
-                user[i].check_balance();
-            }
+            book[0].underfive(book, n);
             break;
+
         case 6:
-            cout << "Exiting...\n";
+            cout << "Exiting..." << endl;
             break;
+
         default:
-            cout << "Invalid choice, please try again.\n";
+            cout << "Invalid choice. Please try again." << endl;
         }
     } while (choice != 6);
 
