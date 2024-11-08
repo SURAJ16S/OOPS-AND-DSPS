@@ -1,4 +1,5 @@
-//queue operation -#include<iostream>
+//queue operation 
+#include<iostream>
 using namespace std;
 
 int queue[5];
